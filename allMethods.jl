@@ -63,6 +63,8 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     snpEff   = mean(snpEff,dims=1)'
     ebvBayes = convert(Array{Int64},genoTest)*snpEff
     
+    varUhat = var(ebvBayes)
+    
     println("TRT $trait r in Tst ", cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")])))
     r_Bayes = cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
 
@@ -74,7 +76,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     removeMe = "MCMC_samples_$BayesX$(Int(piValue)).txt_marker_effects_variances.txt"
     println("removeMe $removeMe removed")
     rm(removeMe)
-    return r_Bayes, varE_Bayes, varSNP_Bayes
+    return r_Bayes, varUhat, varE_Bayes, varSNP_Bayes
 end
 
 function SNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combined::DataFrame,trait::Int,varR::Float64,varSNP::Float64)
