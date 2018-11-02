@@ -1,3 +1,6 @@
+using Distributions
+using RCall
+
 function samplePop(genotypes,whichGen,snpInfo,chr,nRef,nTest)
     @printf("read %.0f individuals and %.0f genotypes \n", size(genotypes,1),size(genotypes,2)-1)
     tempMapData = readtable(snpInfo,header=false,separator=' ')
@@ -41,22 +44,43 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     @printf("mean MAF of selected loci: %.2f \n", mean(p[vcat(selectedLoci...).-1]))
     
     QTLs = vcat(selectedLoci...)   #columns of QTL since 1st column is ID
-        
-#    alpha = rand(Normal(0.0,1.0),totQTLs)
-#    alpha = rand(Gamma(0.4,1.66),totQTLs)
-    alpha = eval(parse("rand($dist$parms,$totQTLs)"))
+ 
+##(a) alpha = eval(parse("rand($dist$parms,$totQTLs)"))
     
-    ###if you want zero mean BV
+    alpha = rcopy(R"""
+    library(lcmix)
+    rho <- matrix(c(1,0.9,0.9,1),nrow=2)
+    alpha <- rmvgamma($totQTL,0.4,1.66,rho)
+    """)
+
+    nNegCor = Int(ceil(q12QTLs*0.78))
+    nPosCor = q12QTLs - nNegCor
+    dNeg1   = sample([-1 1],nNegCor)
+    dNeg2   = -1*dNeg1
+    dPos    = sample([-1 1],nPosCor)
+    dNegCor = [dNeg1 dNeg2]
+    dPosCor = [dPos dPos]
+    dNegPos = [dNegCor;dPosCor]
+    dNegPos = dNegPos[shuffle(1:end), :]
+
+    alpha = alpha.*[sample([-1 1],q1QTLs) zeros(q1QTLs);dNegPos;zeros(q2QTLs) sample([-1 1],q2QTLs)] 
+       
     Xc     = convert(Array{Float64},popGeno)
     Xc[:,2:end]   .-= ones(Float64,size(popGeno,1))*2p
     Qc     = Xc[:,QTLs]
-    #### otherwise, Qc = convert(Array,popGeno[:,QTLs])
     
-    u1 = Qc*(vcat([ones(q1QTLs), ones(q12QTLs), zeros(q2QTLs)]...).*alpha)
+    u = Qc*alpha
+    
+    u1 = u[:,1]
+    u2 = u[:,2]
     vare1 = cov(u1)*(1-h2_1)/h2_1
-    
-    u2 = Qc*(vcat([zeros(q1QTLs), ones(q12QTLs), ones(q2QTLs)]...).*alpha)
     vare2 = cov(u2)*(1-h2_2)/h2_2
+    
+ ##(a)   u1 = Qc*(vcat([ones(q1QTLs), ones(q12QTLs), zeros(q2QTLs)]...).*alpha)
+ ##(a)   vare1 = cov(u1)*(1-h2_1)/h2_1
+ ##(a)   
+ ##(a)   u2 = Qc*(vcat([zeros(q1QTLs), ones(q12QTLs), ones(q2QTLs)]...).*alpha)
+ ##(a)   vare2 = cov(u2)*(1-h2_2)/h2_2
     
     e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
 
