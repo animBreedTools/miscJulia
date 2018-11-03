@@ -55,8 +55,8 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     
     alpha = convert(Array,readtable("rSimAlpha",header=false,separator=' '))
 
-    nNegCor = Int(ceil(q12QTLs*0.78))
-    nPosCor = q12QTLs - nNegCor
+    nPosCor = Int(ceil(q12QTLs*0.78))
+    nNegCor = q12QTLs - nPosCor
     dNeg1   = sample([-1 1],nNegCor)
     dNeg2   = -1*dNeg1
     dPos    = sample([-1 1],nPosCor)
