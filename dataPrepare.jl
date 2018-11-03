@@ -103,9 +103,11 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     infoSimQTL[:,1] .= snpID
     infoSimQTL[:,2] .= collect(1:length(snpID))
     infoSimQTL[:,3:end] = 0
-    infoSimQTL[QTLs[1:(q1QTLs+q12QTLs)]-1,3] = 1
-    infoSimQTL[QTLs[((q1QTLs+q12QTLs)+1):end]-1,4]   = 1
-    infoSimQTL[QTLs[1:end]-1,5:6] .= alpha #may need transpose this was 5 only
+    
+    infoSimQTL[QTLs[1:(q1QTLs+q12QTLs)]-1,3] = 1000         #wrong because the order of QTLs change up
+    infoSimQTL[QTLs[((q1QTLs+q12QTLs)+1):end]-1,4] = 1000   #wrong because the order of QTLs change up
+    infoSimQTL[QTLs[1:end]-1,5:6] = DataFrame(alpha)
+
     infoSimQTL[:,7] .= vcat(p...)         #this was 6
     println(infoSimQTL)
     writecsv("infoSimQTL",convert(Array,infoSimQTL))
