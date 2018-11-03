@@ -53,7 +53,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
    # alpha <- rmvgamma($totQTL,0.4,1.66,rho)
    # """)
     
-    alpha = convert(Array,readtable(rSimAlpha,header=false,separator=' '))
+    alpha = convert(Array,readtable("rSimAlpha",header=false,separator=' '))
 
     nNegCor = Int(ceil(q12QTLs*0.78))
     nPosCor = q12QTLs - nNegCor
