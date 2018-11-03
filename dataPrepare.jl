@@ -1,5 +1,5 @@
 using Distributions
-using RCall
+#using RCall
 
 function samplePop(genotypes,whichGen,snpInfo,chr,nRef,nTest)
     @printf("read %.0f individuals and %.0f genotypes \n", size(genotypes,1),size(genotypes,2)-1)
