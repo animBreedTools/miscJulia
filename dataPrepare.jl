@@ -98,15 +98,15 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     println("residual cov: $R")
     println("heritabilities: $h2sim")
     
-    infoSimQTL = DataFrame(Any,size(popGeno,2)-1,6)
+    infoSimQTL = DataFrame(Any,size(popGeno,2)-1,7)
     snpID = [string(names(popGeno)[i]) for i in 2:size(popGeno,2)] #first one is ID
     infoSimQTL[:,1] .= snpID
     infoSimQTL[:,2] .= collect(1:length(snpID))
     infoSimQTL[:,3:end] = 0
     infoSimQTL[QTLs[1:(q1QTLs+q12QTLs)]-1,3] = 1
     infoSimQTL[QTLs[((q1QTLs+q12QTLs)+1):end]-1,4]   = 1
-    infoSimQTL[QTLs[1:end]-1,5] = alpha #may need transpose
-    infoSimQTL[:,6] .= vcat(p...)
+    infoSimQTL[QTLs[1:end]-1,5:6] = alpha #may need transpose this was 5 only
+    infoSimQTL[:,7] .= vcat(p...)         #this was 6
     println(infoSimQTL)
     writecsv("infoSimQTL",convert(Array,infoSimQTL))
     phenoData = DataFrame(ID = Int64[], pheno1 = Float64[], pheno2 = Float64[], u1 = Float64[], u2 = Float64[], e1 = Float64[], e2 = Float64[])
