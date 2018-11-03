@@ -1,5 +1,5 @@
 using Distributions
-using RCall
+#using RCall
 
 function samplePop(genotypes,whichGen,snpInfo,chr,nRef,nTest)
     @printf("read %.0f individuals and %.0f genotypes \n", size(genotypes,1),size(genotypes,2)-1)
@@ -47,11 +47,13 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
  
 ##(a) alpha = eval(parse("rand($dist$parms,$totQTLs)"))
     
-    alpha = rcopy(R"""
-    library(lcmix)
-    rho <- matrix(c(1,0.9,0.9,1),nrow=2)
-    alpha <- rmvgamma($totQTL,0.4,1.66,rho)
-    """)
+   # alpha = rcopy(R"""
+   # library(lcmix)
+   # rho <- matrix(c(1,0.9,0.9,1),nrow=2)
+   # alpha <- rmvgamma($totQTL,0.4,1.66,rho)
+   # """)
+    
+    alpha = convert(Array,readtable(rSimAlpha,header=false,separator=' '))
 
     nNegCor = Int(ceil(q12QTLs*0.78))
     nPosCor = q12QTLs - nNegCor
