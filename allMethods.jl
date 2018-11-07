@@ -680,6 +680,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     ####
     tempData = DataFrame(X=vcat(ebvBayes...), Y=phenoTest[Symbol("u$trait")])
     bias_Bayes = checkBias(tempData)
+    println("single BayesPR BIAS $(bias_Bayes)")
     ####
 
     varUhat = var(ebvBayes)
