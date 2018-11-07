@@ -73,6 +73,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     ####
     tempData = DataFrame(X=vcat(ebvBayes...), Y=phenoTest[Symbol("u$trait")])
     bias_Bayes = checkBias(tempData)
+    println("single JWAS BIAS $(bias_Bayes)")
     ####
     
     varE_Bayes = out["Posterior mean of residual variance"]
@@ -373,7 +374,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
         tempData = DataFrame(X=vcat(ebvBayes[:,trait]...), Y=phenoTest[Symbol("u$trait")])
         bias_Bayes[trait] = checkBias(tempData)
     end
-    println("multi JWAS BIAS $biasBayes")
+    println("multi JWAS BIAS $(bias_Bayes)")
     ####
 
 
