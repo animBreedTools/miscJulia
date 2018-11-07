@@ -69,7 +69,12 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     
     println("TRT $trait r in Tst ", cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")])))
     r_Bayes = cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
-
+    
+    ####
+    tempData = DataFrame(X=ebvBayes, Y=phenoTest[Symbol("u$trait")])
+    checkBias(Y,X,tempData)
+    ####
+    
     varE_Bayes = out["Posterior mean of residual variance"]
     
     varSNP_Bayes = convert(Array,readtable("MCMC_samples_$BayesX$(Int(piValue)).txt_marker_effects_variances.txt",header=false,separator=','))
