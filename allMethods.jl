@@ -679,4 +679,12 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     return r_Bayes, varUhat, varR, varSNP
 end
 
+function checkBias(Y,X,tempData)
+    ols = lm(@formula(Y ~ X),tempData)
+    print(ols)
+    tstat = (coef(ols)[2]-1.0)/(stderror(ols)[2])
+    pValue = 2*ccdf(TDist(dof_residual(ols)),abs(tstat))
+    return coef(ols)[2], pValue
+end
+
 
