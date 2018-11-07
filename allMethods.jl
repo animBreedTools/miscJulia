@@ -1,3 +1,5 @@
+using GLM  #lm() in biasCheck
+
 
 # adapted from http://morotalab.org/Mrode2005/relmat/createA.txt
 function makeA(s::Array, d::Array)
