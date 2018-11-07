@@ -605,6 +605,15 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
 
     println("r in Tst ", diag(cor(ebvBayes,convert(Array,phenoTest[[:u1,:u2]]))))
     r_Bayes =  diag(cor(ebvBayes,convert(Array,phenoTest[[:u1,:u2]])))
+    
+    ####
+    bias_Bayes = Array{Float64}(2)
+    for trait in 1:2
+        tempData = DataFrame(X=vcat(ebvBayes[:,trait]...), Y=phenoTest[Symbol("u$trait")])
+        bias_Bayes[trait] = checkBias(tempData)
+    end
+    println("multi BayesPR BIAS $(bias_Bayes)")
+    ####
 
     varUhat = cov(ebvBayes)
 
