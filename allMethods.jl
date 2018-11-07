@@ -590,7 +590,7 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     ####
     
     r_ssSNPBLUP_mt = [diag(cor(ebvPred,convert(Array,ebvTrue))) diag(cor(ebvPred2,convert(Array,ebvTrue2)))]
-    bias_ssSNPBLUP_mt = [bias_ssSNPBLUP' bias_ssSNPBLUP2']
+    bias_ssSNPBLUP_mt = [bias_ssSNPBLUP bias_ssSNPBLUP2]
     return r_ssSNPBLUP_mt, bias_ssSNPBLUP_mt
 end
 
@@ -644,7 +644,6 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
         bias_Bayes[trait] = checkBias(tempData)
     end
     println("multi BayesPR BIAS $(bias_Bayes)")
-    bias_Bayes = bias_Bayes' #for return function
     ####
 
     varUhat = cov(ebvBayes)
