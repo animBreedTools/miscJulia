@@ -330,7 +330,8 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
     ####
     
     r_ssSNPBLUP = [cor(ebvPred,ebvTrue) cor(ebvPred2,ebvTrue2)]
-    return r_ssSNPBLUP
+    bias_ssSNPBLUP = [bias_Bayes bias_Bayes2]
+    return r_ssSNPBLUP, bias_ssSNPBLUP
 end
 
 function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All::DataFrame,nTrait::Int,BayesX::String,piValue,nChain::Int,nBurnin::Int,nThin::Int,varR,varG)
@@ -564,12 +565,12 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     ebvTrue = phenoData_G5[testPhenoRows,[:u1,:u2]]
     
     ####
-    bias_Bayes = Array{Float64}(2)
+    bias_ssSNPBLUP = Array{Float64}(2)
     for trait in 1:2
         tempData = DataFrame(X=vcat(ebvPred[:,trait]...), Y=ebvTrue[Symbol("u$trait")])
-        bias_Bayes[trait] = checkBias(tempData)
+        bias_ssSNPBLUP[trait] = checkBias(tempData)
     end
-    println("multi ssSNPBLUP BIAS $(bias_Bayes)")
+    println("multi ssSNPBLUP BIAS $(bias_ssSNPBLUP)")
     ####
 
     noPnoGInd = setdiff(phenoData_G5[:ID],gNoPInd[401:end])
@@ -580,16 +581,17 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     ebvTrue2 = phenoData_G5[testPhenoRows2,[:u1,:u2]]
     
     ####
-    bias_Bayes2 = Array{Float64}(2)
+    bias_ssSNPBLUP2 = Array{Float64}(2)
     for trait in 1:2
         tempData = DataFrame(X=vcat(ebvPred2[:,trait]...), Y=ebvTrue2[Symbol("u$trait")])
-        bias_Bayes2[trait] = checkBias(tempData)
+        bias_ssSNPBLUP2[trait] = checkBias(tempData)
     end
-    println("multi ssSNPBLUP BIAS $(bias_Bayes2)")
+    println("multi ssSNPBLUP NG BIAS $(bias_ssSNPBLUP2)")
     ####
     
     r_ssSNPBLUP_mt = [diag(cor(ebvPred,convert(Array,ebvTrue))) diag(cor(ebvPred2,convert(Array,ebvTrue2)))]
-    return r_ssSNPBLUP_mt
+    bias_ssSNPBLUP_mt = [bias_ssSNPBLUP' bias_ssSNPBLUP2']
+    return r_ssSNPBLUP_mt, bias_ssSNPBLUP_mt
 end
 
 function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All::DataFrame,myMap,nChr::Int,rS::Int,nChain::Int,nBurnin::Int,nThin::Int,varR,varG)
@@ -642,6 +644,7 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
         bias_Bayes[trait] = checkBias(tempData)
     end
     println("multi BayesPR BIAS $(bias_Bayes)")
+    bias_Bayes = bias_Bayes' #for return function
     ####
 
     varUhat = cov(ebvBayes)
@@ -672,7 +675,7 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     varR_BayesPR = reshape(mean(convert(Array,readtable("varEOut"*"$rS",header=false)),1),2,2)
     gc()
     
-    return r_Bayes, varUhat, varR_BayesPR, coVarSNP_BayesPR
+    return r_Bayes, bias_Bayes, varUhat, varR_BayesPR, coVarSNP_BayesPR
 end
 
 function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All::DataFrame,trait,myMap,nChr::Int,rS::Int,nChain::Int,nBurnin::Int,nThin::Int,varR,varG)
@@ -738,7 +741,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     varR = mean(convert(Array,readtable("varEOut"*"$rS",header=false)),1)[]
     gc()
     
-    return r_Bayes, varUhat, varR, varSNP
+    return r_Bayes, bias_Bayes, varUhat, varR, varSNP
 end
 
 function checkBias(tempData)
