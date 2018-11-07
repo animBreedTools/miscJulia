@@ -377,7 +377,6 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     println("multi JWAS BIAS $(bias_Bayes)")
     ####
 
-
     varUhat = cov(ebvBayes)
     varE_Bayes = out["Posterior mean of residual variance"]
     
@@ -551,6 +550,15 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     println("number of gNoPInd: $(length(testRows))")    
     testPhenoRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]];
     ebvTrue = phenoData_G5[testPhenoRows,[:u1,:u2]]
+    
+    ####
+    bias_Bayes = Array{Float64}(2)
+    for trait in 1:2
+        tempData = DataFrame(X=vcat(ebvPred[:,trait]...), Y=ebvTrue[Symbol("u$trait")])
+        bias_Bayes[trait] = checkBias(tempData)
+    end
+    println("multi ssSNPBLUP BIAS $(bias_Bayes)")
+    ####
 
     noPnoGInd = setdiff(phenoData_G5[:ID],gNoPInd[401:end])
     testRows2 = [find(i -> i == j, ebv[:,1])[] for j in noPnoGInd];
@@ -558,6 +566,15 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     println("number of noPnoGInd: $(length(testRows2))")    
     testPhenoRows2 = [find(i -> i == j, phenoData_G5[:ID])[] for j in noPnoGInd];
     ebvTrue2 = phenoData_G5[testPhenoRows2,[:u1,:u2]]
+    
+    ####
+    bias_Bayes2 = Array{Float64}(2)
+    for trait in 1:2
+        tempData = DataFrame(X=vcat(ebvPred2[:,trait]...), Y=ebvTrue2[Symbol("u$trait")])
+        bias_Bayes2[trait] = checkBias(tempData)
+    end
+    println("multi ssSNPBLUP BIAS $(bias_Bayes2)")
+    ####
     
     r_ssSNPBLUP_mt = [diag(cor(ebvPred,convert(Array,ebvTrue))) diag(cor(ebvPred2,convert(Array,ebvTrue2)))]
     return r_ssSNPBLUP_mt
