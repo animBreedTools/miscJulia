@@ -310,12 +310,24 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
     testPhenoRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]];
     ebvTrue = phenoData_G5[testPhenoRows,Symbol("u$trait")]
     
+    ####
+    tempData = DataFrame(X=vcat(ebvPred...), Y=ebvTrue)
+    bias_Bayes = checkBias(tempData)
+    println("single ssSNPBLUP BIAS $(bias_Bayes)")
+    ####
+    
     noPnoGInd = setdiff(phenoData_G5[:ID],gNoPInd[401:end])
     testRows2 = [find(i -> i == j, ebv[:,1])[] for j in noPnoGInd];
     ebvPred2 = ebv[testRows2,2]
     println("number of noPnoGInd: $(length(testRows2))")    
     testPhenoRows2 = [find(i -> i == j, phenoData_G5[:ID])[] for j in noPnoGInd];
     ebvTrue2 = phenoData_G5[testPhenoRows2,Symbol("u$trait")]
+    
+    ####
+    tempData = DataFrame(X=vcat(ebvPred2...), Y=ebvTrue2)
+    bias_Bayes2 = checkBias(tempData)
+    println("single ssSNPBLUP BIAS $(bias_Bayes2)")
+    ####
     
     r_ssSNPBLUP = [cor(ebvPred,ebvTrue) cor(ebvPred2,ebvTrue2)]
     return r_ssSNPBLUP
