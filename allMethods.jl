@@ -73,7 +73,6 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     ####
     tempData = DataFrame(X=vcat(ebvBayes...), Y=phenoTest[Symbol("u$trait")])
     bias_Bayes = checkBias(tempData)
-    println("BIAS...beta, p: $(bias_Bayes)")
     ####
     
     varE_Bayes = out["Posterior mean of residual variance"]
@@ -367,6 +366,16 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
 
     println("r in Tst ", diag(cor(ebvBayes,convert(Array,phenoTest[[:u1,:u2]]))))
     r_Bayes =  diag(cor(ebvBayes,convert(Array,phenoTest[[:u1,:u2]])))
+    
+    ####
+    bias_Bayes = Array{Float64}(2)
+    for i in 1:2
+        tempData = DataFrame(X=vcat(ebvBayes[:,i]...), Y=phenoTest[Symbol("u$trait")])
+        bias_Bayes[i] = checkBias(tempData)
+    end
+    println("multi JWAS BIAS $biasBayes")
+    ####
+
 
     varUhat = cov(ebvBayes)
     varE_Bayes = out["Posterior mean of residual variance"]
@@ -670,7 +679,6 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     ####
     tempData = DataFrame(X=vcat(ebvBayes...), Y=phenoTest[Symbol("u$trait")])
     bias_Bayes = checkBias(tempData)
-    println("BIAS...beta, p: $(bias_Bayes)")
     ####
 
     varUhat = var(ebvBayes)
@@ -698,7 +706,8 @@ function checkBias(tempData)
     print(ols)
     tstat = (coef(ols)[2]-1.0)/(stderror(ols)[2])
     pValue = 2*ccdf(TDist(dof_residual(ols)),abs(tstat))
-    return coef(ols)[2], pValue
+    println("test against 1.0: p-value=$pValue")
+    return coef(ols)[2]
 end
 
 
