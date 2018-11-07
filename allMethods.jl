@@ -71,8 +71,9 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     r_Bayes = cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
     
     ####
-    tempData = DataFrame(X=ebvBayes, Y=phenoTest[Symbol("u$trait")])
-    checkBias(Y,X,tempData)
+    tempData = DataFrame(X=vcat(ebvBayes...), Y=phenoTest[Symbol("u$trait")])
+    bias_Bayes = checkBias(tempData)
+    println("BIAS...beta, p: $(bias_Bayes)")
     ####
     
     varE_Bayes = out["Posterior mean of residual variance"]
@@ -665,8 +666,14 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     
     println("r in Tst ", diag(cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))))
     r_Bayes =  cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
+    
+    ####
+    tempData = DataFrame(X=vcat(ebvBayes...), Y=phenoTest[Symbol("u$trait")])
+    bias_Bayes = checkBias(tempData)
+    println("BIAS...beta, p: $(bias_Bayes)")
+    ####
 
-    varUhat = cov(ebvBayes)
+    varUhat = var(ebvBayes)
 
     varRegion = vcat(mean(convert(Array,readtable("varBetaOut"*"$rS",header=false)),dims=1)...)
 
