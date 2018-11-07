@@ -369,9 +369,9 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     
     ####
     bias_Bayes = Array{Float64}(2)
-    for i in 1:2
-        tempData = DataFrame(X=vcat(ebvBayes[:,i]...), Y=phenoTest[Symbol("u$trait")])
-        bias_Bayes[i] = checkBias(tempData)
+    for trait in 1:2
+        tempData = DataFrame(X=vcat(ebvBayes[:,trait]...), Y=phenoTest[Symbol("u$trait")])
+        bias_Bayes[trait] = checkBias(tempData)
     end
     println("multi JWAS BIAS $biasBayes")
     ####
