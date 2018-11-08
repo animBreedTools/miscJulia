@@ -444,7 +444,7 @@ function prepDataSSBR_mt(phenoData_G4::DataFrame,genoData_Combined::DataFrame,po
 
     n2, nCols = size(genoData_Combined)
     nMarkers  = nCols - 1
-    M2 = convert(Array{Float32},genoData_Combined[:,2:end])
+    M2 = convert(Array{Float32},genoData_Combined[2:end])
     print(size(M2))
 
     M1 = -Ai11\(Ai12*M2)
