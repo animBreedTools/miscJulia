@@ -251,7 +251,7 @@ function prepDataSSBR(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPe
     Z2[:,gNoPInd] .= 0
     Z2 = Z2[gpInd,[ngInd;gInd]]
 
-    Z1 = sparse(Diagonal((y1Temp.!=-9999.0)*1)) #full() replaced with sparse
+    Z1 = Matrix(Diagonal((y1Temp.!=-9999.0)*1)) #full() replaced with Matrix
     Z1 = Z1[find(sum(Z1,dims=2).!=0),:]
     Z1 = [Z1 zeros(length(pNoGInd), length(gInd))]
 
@@ -285,7 +285,7 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
         covarSNP = varSNP
     end
         
-    D      = sparse(Diagonal(varR./covarSNP));  #full() replaced with sparse
+    D      = Matrix(Diagonal(varR./covarSNP));  #full() replaced with Matrix
 
     λ1 = varR/varG
 
