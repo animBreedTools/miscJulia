@@ -382,7 +382,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     r_Bayes =  diag(cor(ebvBayes,convert(Array,phenoTest[[:u1,:u2]])))
     
     ####
-    bias_Bayes = Array{Float64}(2)
+    bias_Bayes = Array{Float64}(undef,2)
     for trait in 1:2
         tempData = DataFrame(X=vcat(ebvBayes[:,trait]...), Y=phenoTest[Symbol("u$trait")])
         bias_Bayes[trait] = checkBias(tempData)
@@ -565,7 +565,7 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     ebvTrue = phenoData_G5[testPhenoRows,[:u1,:u2]]
     
     ####
-    bias_ssSNPBLUP = Array{Float64}(2)
+    bias_ssSNPBLUP = Array{Float64}(undef,2)
     for trait in 1:2
         tempData = DataFrame(X=vcat(ebvPred[:,trait]...), Y=ebvTrue[Symbol("u$trait")])
         bias_ssSNPBLUP[trait] = checkBias(tempData)
@@ -581,7 +581,7 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     ebvTrue2 = phenoData_G5[testPhenoRows2,[:u1,:u2]]
     
     ####
-    bias_ssSNPBLUP2 = Array{Float64}(2)
+    bias_ssSNPBLUP2 = Array{Float64}(undef,2)
     for trait in 1:2
         tempData = DataFrame(X=vcat(ebvPred2[:,trait]...), Y=ebvTrue2[Symbol("u$trait")])
         bias_ssSNPBLUP2[trait] = checkBias(tempData)
@@ -638,7 +638,7 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     r_Bayes =  diag(cor(ebvBayes,convert(Array,phenoTest[[:u1,:u2]])))
     
     ####
-    bias_Bayes = Array{Float64}(2)
+    bias_Bayes = Array{Float64}(undef,2)
     for trait in 1:2
         tempData = DataFrame(X=vcat(ebvBayes[:,trait]...), Y=phenoTest[Symbol("u$trait")])
         bias_Bayes[trait] = checkBias(tempData)
@@ -655,9 +655,9 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     snpFile = readtable("snpInfo",header=false);
     regions = [searchsorted(snpFile[:x3],i) for i in 1:maximum(snpFile[:x3])];
 
-    covSNP  = Array{Float64}(size(genoData[:,2:end],2))
-    var1SNP = Array{Float64}(size(genoData[:,2:end],2))
-    var2SNP = Array{Float64}(size(genoData[:,2:end],2))
+    covSNP  = Array{Float64}(undef,size(genoData[:,2:end],2))
+    var1SNP = Array{Float64}(undef,size(genoData[:,2:end],2))
+    var2SNP = Array{Float64}(undef,size(genoData[:,2:end],2))
 
     for i in 1:length(regions)
         covSNP[regions[i]]  .= covRegion[i] 
@@ -731,7 +731,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     
     regions = [searchsorted(snpFile[:x3],i) for i in 1:maximum(snpFile[:x3])];
 
-    varSNP = Array{Float64}(size(genoData[2:end],2))
+    varSNP = Array{Float64}(undef,size(genoData[2:end],2))
 
     for i in 1:length(regions)
         varSNP[regions[i]] .= varRegion[i] 
