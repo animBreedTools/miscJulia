@@ -232,7 +232,7 @@ function prepDataSSBR(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPe
 
     n2, nCols = size(genoData_Combined)
     nMarkers  = nCols - 1
-    M2 = convert(Array{Float32},genoData_Combined[:,2:end])
+    M2 = convert(Array{Float32},genoData_Combined[2:end])
     print(size(M2))
 
     M1 = -Ai11\(Ai12*M2)
@@ -247,12 +247,12 @@ function prepDataSSBR(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPe
     y2 = y2Temp[y2Temp.!=-9999.0]
     y  = [y1;y2]
 
-    Z2 = eye(nTot)
+    Z2 = Matrix(1.0I,nTot,nTot)
     Z2[:,gNoPInd] .= 0
     Z2 = Z2[gpInd,[ngInd;gInd]]
 
-    Z1 = full(Diagonal((y1Temp.!=-9999.0)*1))
-    Z1 = Z1[find(sum(Z1,2).!=0),:]
+    Z1 = sparse(Diagonal((y1Temp.!=-9999.0)*1)) #full() replaced with sparse
+    Z1 = Z1[find(sum(Z1,dims=2).!=0),:]
     Z1 = [Z1 zeros(length(pNoGInd), length(gInd))]
 
     n1 = size(M1,1)
@@ -285,7 +285,7 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
         covarSNP = varSNP
     end
         
-    D      = full(Diagonal(varR./covarSNP));
+    D      = sparse(Diagonal(varR./covarSNP));  #full() replaced with sparse
 
     λ1 = varR/varG
 
