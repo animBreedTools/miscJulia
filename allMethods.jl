@@ -710,7 +710,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     bayesPR(genoRef, phenoRef[Symbol("pheno$trait")], myMap , nChr, rS, varG, varR, nChain, nBurnin, nThin, false)
 
     meanBeta = readtable("betaOut"*"$rS",header=false)
-    meanBeta   = mean(convert(Array,meanBeta),1)'
+    meanBeta   = mean(convert(Array,meanBeta),dims=1)'
 
     ebvBayes = convert(Array{Int64},genoTest)*meanBeta
     
@@ -731,14 +731,13 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     
     regions = [searchsorted(snpFile[:x3],i) for i in 1:maximum(snpFile[:x3])];
 
-    varSNP = Array{Float64}(size(genoData[:,2:end],2))
+    varSNP = Array{Float64}(size(genoData[2:end],2))
 
     for i in 1:length(regions)
         varSNP[regions[i]] .= varRegion[i] 
     end
 
-    varR = mean(convert(Array,readtable("varEOut"*"$rS",header=false)),1)[]
-    gc()
+    varR = mean(convert(Array,readtable("varEOut"*"$rS",header=false)),dims=1)[]
     
     return r_Bayes, bias_Bayes, varUhat, varR, varSNP
 end
