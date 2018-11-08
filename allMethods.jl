@@ -34,11 +34,11 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     gNoPInd   = setdiff(gInd,phenoData_G4[:ID])
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
     genoRef = genoData_Combined[refRows,:]; #first one is ID
     
     writecsv("refGeno",convert(Array,genoRef))
@@ -52,11 +52,11 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
 
     #not IDs, rows!
     # first 200 is sires in G3 and G4 gNoPInd[401:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
     genoTest = genoData_Combined[testRows,2:end];
 
     #ebvBayes = convert(Array{Int64},genoTest)*out["Posterior mean of marker effects"]
@@ -93,11 +93,11 @@ function SNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combin
     gNoPInd   = setdiff(gInd,phenoData_G4[:ID])
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
     genoRef = genoData_Combined[refRows,2:end]; #first one is ID
 
     nInd = size(genoRef,1)
@@ -115,11 +115,11 @@ function SNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combin
 
     #not IDs, rows!
     # first 200 in G3 and G4 are sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
     genoTest = genoData_Combined[testRows,2:end];
 
     uHat = convert(Array,genoTest)*βhat
@@ -134,11 +134,11 @@ function wSNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combi
     gNoPInd   = setdiff(gInd,phenoData_G4[:ID])
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
     genoRef = genoData_Combined[refRows,2:end]; #first one is ID
 
     varSNP =   full(Diagonal(varSNP))
@@ -159,11 +159,11 @@ function wSNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combi
 
     #not IDs, rows!
     # first 200 in G3 and G4 are sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
     genoTest = genoData_Combined[testRows,2:end];
     
     uHat = convert(Array,genoTest)*βhat
@@ -179,7 +179,7 @@ function PBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combined
 
     #not IDs, rows!
     # first 200 in G3 and G4 are sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
 
     nTot = size(popPedigree,1)
@@ -304,10 +304,10 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
     aHat[1:n1,:] += sol[(length(sol)-n1+1):end]   #this adds epsilon to ng individuals
     ebv = [[ngInd;gInd] aHat]
 
-    testRows = [find(i -> i == j, ebv[:,1])[] for j in gNoPInd[401:end]];
+    testRows = [findall(i -> i == j, ebv[:,1])[] for j in gNoPInd[401:end]];
     ebvPred = ebv[testRows,2]
     println("number of gNoPInd: $(length(testRows))")    
-    testPhenoRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]];
+    testPhenoRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]];
     ebvTrue = phenoData_G5[testPhenoRows,Symbol("u$trait")]
     
     ####
@@ -317,10 +317,10 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
     ####
     
     noPnoGInd = setdiff(phenoData_G5[:ID],gNoPInd[401:end])
-    testRows2 = [find(i -> i == j, ebv[:,1])[] for j in noPnoGInd];
+    testRows2 = [findall(i -> i == j, ebv[:,1])[] for j in noPnoGInd];
     ebvPred2 = ebv[testRows2,2]
     println("number of noPnoGInd: $(length(testRows2))")    
-    testPhenoRows2 = [find(i -> i == j, phenoData_G5[:ID])[] for j in noPnoGInd];
+    testPhenoRows2 = [findall(i -> i == j, phenoData_G5[:ID])[] for j in noPnoGInd];
     ebvTrue2 = phenoData_G5[testPhenoRows2,Symbol("u$trait")]
     
     ####
@@ -349,11 +349,11 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     gNoPInd   = setdiff(gInd,phenoData_G4[:ID])
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
     genoRef = genoData_Combined[refRows,:]; #first one is ID
 
     writecsv("refGeno",convert(Array,genoRef))
@@ -367,11 +367,11 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
 
     #not IDs, rows!
     # first 200 is sires in G3 and G4 gNoPInd[401:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
     genoTest = genoData_Combined[testRows,2:end];
 
     #ebvBayes = convert(Array{Int64},genoTest)*hcat(out["Posterior mean of marker effects"]...)
@@ -558,10 +558,10 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     aHat[1:n1,:] += reshape(sol[(length(sol)-(2*n1)+1):end],size(ngInd,1),2)
     ebv = [[ngInd;gInd] aHat]
     
-    testRows = [find(i -> i == j, ebv[:,1])[] for j in gNoPInd[401:end]];
+    testRows = [findall(i -> i == j, ebv[:,1])[] for j in gNoPInd[401:end]];
     ebvPred = ebv[testRows,2:3]
     println("number of gNoPInd: $(length(testRows))")    
-    testPhenoRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]];
+    testPhenoRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]];
     ebvTrue = phenoData_G5[testPhenoRows,[:u1,:u2]]
     
     ####
@@ -574,10 +574,10 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     ####
 
     noPnoGInd = setdiff(phenoData_G5[:ID],gNoPInd[401:end])
-    testRows2 = [find(i -> i == j, ebv[:,1])[] for j in noPnoGInd];
+    testRows2 = [findall(i -> i == j, ebv[:,1])[] for j in noPnoGInd];
     ebvPred2 = ebv[testRows2,2:3]
     println("number of noPnoGInd: $(length(testRows2))")    
-    testPhenoRows2 = [find(i -> i == j, phenoData_G5[:ID])[] for j in noPnoGInd];
+    testPhenoRows2 = [findall(i -> i == j, phenoData_G5[:ID])[] for j in noPnoGInd];
     ebvTrue2 = phenoData_G5[testPhenoRows2,[:u1,:u2]]
     
     ####
@@ -608,20 +608,20 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     gNoPInd   = setdiff(gInd,phenoData_G4[:ID])
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
     genoRef = genoData_Combined[refRows,:]; #first one is ID
     
        #not IDs, rows!
     # first 200 is sires in G3 and G4 gNoPInd[401:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
     genoTest = genoData_Combined[testRows,2:end];
     
     mtBayesPR(genoRef, phenoRef[[:pheno1, :pheno2]], myMap , nChr, rS, varG, varR, nChain, nBurnin, nThin, false)
@@ -691,20 +691,20 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     gNoPInd   = setdiff(gInd,phenoData_G4[:ID])
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
 
     #not IDs, rows!
-    refRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
+    refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
     genoRef = genoData_Combined[refRows,:]; #first one is ID
     
        #not IDs, rows!
     # first 200 is sires in G3 and G4 gNoPInd[401:end]
-    testRows = [find(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[401:end]]
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
-    testRows = [find(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
+    testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[401:end]]
     genoTest = genoData_Combined[testRows,2:end];
 
     bayesPR(genoRef, phenoRef[Symbol("pheno$trait")], myMap , nChr, rS, varG, varR, nChain, nBurnin, nThin, false)
