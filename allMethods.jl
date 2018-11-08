@@ -111,7 +111,7 @@ function SNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combin
 
     λ    = varR/varSNP
 
-    βhat = X' * inv(X*X' + eye(nInd)*λ) * y
+    βhat = X' * inv(X*X' + Matrix(1.0I,nInd,nInd)*λ) * y
 
     #not IDs, rows!
     # first 200 in G3 and G4 are sires gNoPInd[201:end]
@@ -155,7 +155,7 @@ function wSNPBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combi
 
     Λi = inv(Λ)
 
-    βhat = Λi*X' * inv(X*Λi*X' + eye(nInd)) * y
+    βhat = Λi*X' * inv(X*Λi*X' + Matrix(1.0I,nInd,nInd)) * y
 
     #not IDs, rows!
     # first 200 in G3 and G4 are sires gNoPInd[201:end]
@@ -189,7 +189,7 @@ function PBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combined
     y[phenoData_G4[:ID,]] = phenoData_G4[Symbol("pheno$trait"),]
     
     y = y[find(y.!=-9999.0)]
-    Z = eye(nTot)
+    Z = Matrix(1.0I,nInd,nTot)
     
     Z[:,setdiff(allInd,phenoData_G4[:ID])] .= 0
     Z = Z[find(sum(Z,2).!=0),:]
@@ -197,7 +197,7 @@ function PBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combined
 
     
     G = (popPedigree*varG)
-    R = varR*eye(length(y));
+    R = varR*Matrix(1.0I,length(y),length(y));
     
     println("sizeG $(size(G)) sizeR $(size(R))")
 
@@ -470,7 +470,7 @@ function prepDataSSBR_mt(phenoData_G4::DataFrame,genoData_Combined::DataFrame,po
     y2 = y2Temp[y2Temp.!=-9999.0]
     y  = [y1;y2]
     
-    Z2 = eye(nTot)
+    Z2 = Matrix(1.0I,nTot,nTot)
     Z2[:,gNoPInd] .= 0
     Z2 = Z2[gpInd,[ngInd;gInd]]
 
@@ -524,7 +524,7 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     B = full([Diagonal(coVarSNP[:,1]) Diagonal(coVarSNP[:,2]);
     Diagonal(coVarSNP[:,3]) Diagonal(coVarSNP[:,4])])
     
-    invR = inv(kron(varR,eye(Int(length(y_2Trait)/2)))) #assumes same number of pheno for each trait
+    invR = inv(kron(varR,Matrix(1.0I,Int(length(y_2Trait)/2),Int(length(y_2Trait)/2)))) #assumes same number of pheno for each trait
 
     #invR1 = inv(kron(varR,eye(Int(length(y1_2Trait)/2)))) #assumes same number of pheno per trait
     
