@@ -524,7 +524,7 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
     B = full([Diagonal(coVarSNP[:,1]) Diagonal(coVarSNP[:,2]);
     Diagonal(coVarSNP[:,3]) Diagonal(coVarSNP[:,4])])
     
-    invR = inv(kron(varR,Matrix(1.0I,Int(length(y_2Trait)/2),Int(length(y_2Trait)/2)))) #assumes same number of pheno for each trait
+    invR = kron(inv(varR),Matrix(1.0I,Int(length(y_2Trait)/2),Int(length(y_2Trait)/2))) #assumes same number of pheno for each trait
 
     #invR1 = inv(kron(varR,eye(Int(length(y1_2Trait)/2)))) #assumes same number of pheno per trait
     
