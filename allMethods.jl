@@ -209,7 +209,7 @@ function PBLUP(phenoData_G4::DataFrame,phenoData_G5::DataFrame,genoData_Combined
     return r_PBLUP
 end
 
-function prepDataSSBR(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPedigree::Array,trait::Int)
+function prepDataSSBR_OLD(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPedigree::Array,trait::Int)
     nTot = size(popPedigree,1)
     allInd    = collect(1:nTot)
     gpInd     = intersect(genoData_Combined[:ID],phenoData_G4[:ID]);
@@ -421,7 +421,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     return r_Bayes, varUhat, varE_Bayes, coVarSNP_Bayes
 end
 
-function prepDataSSBR_mt(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPedigree::Array,nTraits::Int)
+function prepDataSSBR_OLDmt(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPedigree::Array,nTraits::Int)
     nTot = size(popPedigree,1)
     allInd    = collect(1:nTot)
     gpInd     = intersect(genoData_Combined[:ID],phenoData_G4[:ID]);
