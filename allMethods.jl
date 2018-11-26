@@ -65,7 +65,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     snpEff   = mean(snpEff,dims=1)'
     ebvBayes = convert(Array{Int64},genoTest)*snpEff
     
-    varUhat = var(convert(Array{Int64},genoRef[2:end])*snpEff)
+    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
     
     println("TRT $trait r in Tst ", cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")])))
     r_Bayes = cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
@@ -390,7 +390,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     println("multi JWAS BIAS $(bias_Bayes)")
     ####
 
-    varUhat = cov(convert(Array{Int64},genoRef[2:end])*snpEff)
+    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
     varE_Bayes = out["Posterior mean of residual variance"]
     
 #    coVarSNP_Bayes = Array{Any}(0, 4)
@@ -646,7 +646,7 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     println("multi BayesPR BIAS $(bias_Bayes)")
     ####
 
-    varUhat = cov(convert(Array{Int64},genoRef[2:end])*snpEff)
+    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
 
     covRegion = vcat(mean(convert(Array,readtable("covBetaOut"*"$rS",header=false)),dims=1)...)
     var1Region = vcat(mean(convert(Array,readtable("varBeta1Out"*"$rS",header=false)),dims=1)...)
@@ -723,7 +723,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     println("single BayesPR BIAS $(bias_Bayes)")
     ####
 
-    varUhat = var(convert(Array{Int64},genoRef[2:end])*snpEff)
+    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
 
     varRegion = vcat(mean(convert(Array,readtable("varBetaOut"*"$rS",header=false)),dims=1)...)
 
