@@ -709,10 +709,10 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
 
     bayesPR(genoRef, phenoRef[Symbol("pheno$trait")], myMap , nChr, rS, varG, varR, nChain, nBurnin, nThin, false)
 
-    meanBeta = readtable("betaOut"*"$rS",header=false)
-    meanBeta   = mean(convert(Array,meanBeta),dims=1)'
+    snpEff = readtable("betaOut"*"$rS",header=false)
+    snpEff   = mean(convert(Array,snpEff),dims=1)'
 
-    ebvBayes = convert(Array{Int64},genoTest)*meanBeta
+    ebvBayes = convert(Array{Int64},genoTest)*snpEff
     
     println("r in Tst ", diag(cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))))
     r_Bayes =  cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
