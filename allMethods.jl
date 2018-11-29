@@ -81,7 +81,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     varSNP_Bayes = convert(Array,readtable("MCMC_samples_$BayesX$(piValue).txt_marker_effects_variances.txt",header=false,separator=','))
     println("size of SNPEFF: $(size(varSNP_Bayes))")
     varSNP_Bayes = vcat(mean(varSNP_Bayes,dims=1)...)
-    removeMe = "MCMC_samples_$BayesX$(Int(piValue)).txt_marker_effects_variances.txt"
+    removeMe = "MCMC_samples_$BayesX$(piValue).txt_marker_effects_variances.txt"
     println("removeMe $removeMe removed")
     rm(removeMe)
     return r_Bayes, varUhat, varE_Bayes, varSNP_Bayes
