@@ -47,7 +47,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     model1 = build_model(model_equations,varR);
     add_markers(model1,"refGeno",varG,separator=',',header=false);
 
-    out = runMCMC(model1,phenoRef,Pi=piValue,estimatePi=false,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(Int(piValue)).txt");
+    out = runMCMC(model1,phenoRef,Pi=piValue,estimatePi=false,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(piValue).txt");
     #MCMC_marker_effects_output_file was changes to output_file
 
     #not IDs, rows!
@@ -60,7 +60,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     genoTest = genoData_Combined[testRows,2:end];
 
     #ebvBayes = convert(Array{Int64},genoTest)*out["Posterior mean of marker effects"]
-    snpEff   = convert(Array,readtable("MCMC_samples_$BayesX$(Int(piValue)).txt_marker_effects_pheno$trait.txt",separator=',',header=false))
+    snpEff   = convert(Array,readtable("MCMC_samples_$BayesX$(piValue).txt_marker_effects_pheno$trait.txt",separator=',',header=false))
     println("size of SNPEFF: $(size(snpEff))")
     snpEff   = mean(snpEff,dims=1)'
     ebvBayes = convert(Array{Int64},genoTest)*snpEff
@@ -78,7 +78,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     
     varE_Bayes = out["Posterior mean of residual variance"]
     
-    varSNP_Bayes = convert(Array,readtable("MCMC_samples_$BayesX$(Int(piValue)).txt_marker_effects_variances.txt",header=false,separator=','))
+    varSNP_Bayes = convert(Array,readtable("MCMC_samples_$BayesX$(piValue).txt_marker_effects_variances.txt",header=false,separator=','))
     println("size of SNPEFF: $(size(varSNP_Bayes))")
     varSNP_Bayes = vcat(mean(varSNP_Bayes,dims=1)...)
     removeMe = "MCMC_samples_$BayesX$(Int(piValue)).txt_marker_effects_variances.txt"
