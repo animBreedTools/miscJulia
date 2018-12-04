@@ -396,6 +396,18 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     ####
 
     varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
+    
+    file1="MCMC_samples_marker_effects_pheno1.txt"
+    file2="MCMC_samples_marker_effects_pheno2.txt"
+    samples4G=get_additive_genetic_variances(model1,file1,file2)
+    println("size 4G: $size(samples4G)")
+    var1    = mean(samples4G[1,1:size(samples4G)[2]])
+    var2    = mean(samples4G[4,1:size(samples4G)[2]])
+    covar12 = mean(samples4G[2,1:size(samples4G)[2]])
+    coVarUhat = [var1 covar12;covar12 var2]
+    
+    println("varUhat: $(varUhat) coVarUhatMCMC: $(coVarUhat)")
+
     varE_Bayes = out["Posterior mean of residual variance"]
     
 #    coVarSNP_Bayes = Array{Any}(0, 4)
