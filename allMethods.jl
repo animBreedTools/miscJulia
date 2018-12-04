@@ -65,12 +65,11 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     snpEff   = mean(snpEff,dims=1)'
     ebvBayes = convert(Array{Int64},genoTest)*snpEff
     
-    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
+#    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
     
     file1 = "MCMC_samples_$BayesX$(piValue).txt_marker_effects_pheno$trait.txt"
     samples4G=get_additive_genetic_variances(convert(Array{Float64},genoRef[2:end]),file1)
-    varUhat2 = mean(samples4G)
-    println("varUhat: $(varUhat) varUhatMCMC: $(varUhat2)")
+    varUhat = mean(samples4G)
     
     println("TRT $trait r in Tst ", cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")])))
     r_Bayes = cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
@@ -395,20 +394,15 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     println("multi JWAS BIAS $(bias_Bayes)")
     ####
 
-    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
+#    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
     
     file1 = "MCMC_samples_marker_effects_pheno1.txt"
     file2 = "MCMC_samples_marker_effects_pheno2.txt"
     samples4G = get_additive_genetic_variances(model1,file1,file2)
     samples4G = reshape(hcat(samples4G...),4,length(samples4G))
-    println("size 4G: $(size(samples4G))")
-    println(samples4G)
     coVarUhat = reshape(mean(samples4G,2),2,2)
-    println(samples4G)
-    
-    println("varUhat: $(varUhat) coVarUhatMCMC: $(coVarUhat)")
 
-    varE_Bayes = out["Posterior mean of residual variance"]
+    coVarE_Bayes = out["Posterior mean of residual variance"]
     
 #    coVarSNP_Bayes = Array{Any}(0, 4)
     
@@ -435,7 +429,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
 #    removeMe = "MCMC_samples_$BayesX$(Int(piValue)).txt_variance.txt"
 #    println("removeMe $removeMe removed")
 #    rm(removeMe)
-    return r_Bayes, varUhat, varE_Bayes, coVarSNP_Bayes
+    return r_Bayes, coVarUhat, coVarE_Bayes, coVarSNP_Bayes
 end
 
 function prepDataSSBR_OLDmt(phenoData_G4::DataFrame,genoData_Combined::DataFrame,popPedigree::Array,nTraits::Int)
