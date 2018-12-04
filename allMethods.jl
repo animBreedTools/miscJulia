@@ -67,6 +67,11 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     
     varUhat = var(convert(Array,genoRef[2:end])*snpEff)
     
+    file1 = "MCMC_samples_$BayesX$(piValue).txt_marker_effects_pheno$trait.txt"
+    samples4G=get_additive_genetic_variances(convert(Array{Float64},genoRef[2:end]),file1)
+    varUhat2 = mean(samples4G)
+    println("varUhat: $(varUhat) varUhatMCMC: $(varUhat2)")
+    
     println("TRT $trait r in Tst ", cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")])))
     r_Bayes = cor(ebvBayes,convert(Array,phenoTest[Symbol("u$trait")]))
     
