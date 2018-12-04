@@ -403,7 +403,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     samples4G = reshape(hcat(samples4G...),4,length(samples4G))
     println("size 4G: $(size(samples4G))")
     println(samples4G)
-    coVarUhat = mean(samples4G,1)
+    coVarUhat = mean(samples4G,2)
     println(samples4G)
     
     println("varUhat: $(varUhat) coVarUhatMCMC: $(coVarUhat)")
