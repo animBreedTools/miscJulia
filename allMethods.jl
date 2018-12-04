@@ -401,6 +401,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     file2="MCMC_samples_marker_effects_pheno2.txt"
     samples4G=get_additive_genetic_variances(model1,file1,file2)
     println("size 4G: $(size(samples4G))")
+    println(samples4G)
     var1    = mean(samples4G[1,1:end])
     var2    = mean(samples4G[4,1:end])
     covar12 = mean(samples4G[2,1:end])
