@@ -657,7 +657,8 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     println("multi BayesPR BIAS $(bias_Bayes)")
     ####
 
-    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
+    coVarUhat = reshape(mean(convert(Array{Float64},readtable("coVarUhatOut"*"$rS",header=false)),1),2,2)
+#    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
 
     covRegion = vcat(mean(convert(Array,readtable("covBetaOut"*"$rS",header=false)),dims=1)...)
     var1Region = vcat(mean(convert(Array,readtable("varBeta1Out"*"$rS",header=false)),dims=1)...)
@@ -682,10 +683,10 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
 
 
 #    varG_BayesPR     = reshape(sum(coVarSNP_BayesPR.*(2*p.*(1-p))',1),2,2)
-    varR_BayesPR = reshape(mean(convert(Array,readtable("varEOut"*"$rS",header=false)),1),2,2)
+    coVarR_BayesPR = reshape(mean(convert(Array,readtable("varEOut"*"$rS",header=false)),1),2,2)
     gc()
     
-    return r_Bayes, bias_Bayes, varUhat, varR_BayesPR, coVarSNP_BayesPR
+    return r_Bayes, bias_Bayes, coVarUhat, coVarR_BayesPR, coVarSNP_BayesPR
 end
 
 function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All::DataFrame,trait,myMap,nChr::Int,rS::Int,nChain::Int,nBurnin::Int,nThin::Int,varR,varG)
@@ -734,7 +735,8 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     println("single BayesPR BIAS $(bias_Bayes)")
     ####
 
-    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
+    varUhat = mean(convert(Array,readtable("varUhatOut"*"$rS",header=false)))
+#    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
 
     varRegion = vcat(mean(convert(Array,readtable("varBetaOut"*"$rS",header=false)),dims=1)...)
 
