@@ -744,7 +744,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     
     regions = [searchsorted(snpFile[:x3],i) for i in 1:maximum(snpFile[:x3])];
 
-    varSNP = Array{Float64}(undef,size(genoData[2:end],2))
+    varSNP = Array{Float64}(undef,size(genoRef[2:end],2))
 
     for i in 1:length(regions)
         varSNP[regions[i]] .= varRegion[i] 
