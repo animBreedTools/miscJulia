@@ -713,6 +713,11 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
        #not IDs, rows!
     # first 200 is sires in G3 and G4 gNoPInd[401:end]
     testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[end-499:end]] #401:end
+    println("testRows $size(testRows)")
+    println(testRows)
+    testRows2 = [findall(i -> i == j, phenoData_G5[:ID]) for j in gInd] #401:end
+    println("testRows2 $size(testRows2)")
+    println(testRows2)
     phenoTest = phenoData_G5[testRows,:];
     #not IDs, rows!
     # first 200 is sires gNoPInd[201:end]
