@@ -715,7 +715,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     testRows = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gNoPInd[end-499:end]] #401:end
     println("testRows $size(testRows)")
     println(testRows)
-    testRows2 = [findall(i -> i == j, phenoData_G5[:ID]) for j in gInd] #401:end
+    testRows2 = [findall(i -> i == j, phenoData_G5[:ID])[] for j in gInd] #401:end
     println("testRows2 $size(testRows2)")
     println(testRows2)
     phenoTest = phenoData_G5[testRows,:];
