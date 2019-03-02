@@ -46,8 +46,11 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     model_equations = "pheno$trait = intercept" ;
     model1 = build_model(model_equations,varR);
     add_markers(model1,"refGeno",varG,separator=',',header=false);
-
-    out = runMCMC(model1,phenoRef,Pi=piValue,estimatePi=false,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(piValue).txt");
+    
+    if BayesX=="RR-BLUP"
+            out = runMCMC(model1,phenoRef,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(piValue).txt");
+        else out = runMCMC(model1,phenoRef,Pi=piValue,estimatePi=false,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(piValue).txt");
+    end
     #MCMC_marker_effects_output_file was changes to output_file
 
     #not IDs, rows!
