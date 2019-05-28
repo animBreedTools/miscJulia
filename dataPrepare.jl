@@ -57,15 +57,15 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
 
     nPosCor = Int(ceil(q12QTLs*0.78))
     nNegCor = q12QTLs - nPosCor
-    dNeg1   = sample([-1 1],nNegCor)
-    dNeg2   = -1*dNeg1
-    dPos    = sample([-1 1],nPosCor)
+    dNeg1   = sample([1 1],nNegCor)
+    dNeg2   = 1*dNeg1
+    dPos    = sample([1 1],nPosCor)
     dNegCor = [dNeg1 dNeg2]
     dPosCor = [dPos dPos]
     dNegPos = [dNegCor;dPosCor]
     dNegPos = dNegPos[shuffle(1:end), :]
 
-    alpha = alpha.*[sample([-1 1],q1QTLs) zeros(q1QTLs);dNegPos;zeros(q2QTLs) sample([-1 1],q2QTLs)] 
+    alpha = alpha.*[sample([1 1],q1QTLs) zeros(q1QTLs);dNegPos;zeros(q2QTLs) sample([1 1],q2QTLs)] 
        
     Xc     = convert(Array{Float64},popGeno)
     Xc[:,2:end]   .-= ones(Float64,size(popGeno,1))*2p
