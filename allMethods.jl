@@ -1,5 +1,6 @@
 using GLM  #lm() in biasCheck
-
+using Preconditioners
+using IterativeSolvers
 
 # adapted from http://morotalab.org/Mrode2005/relmat/createA.txt
 function makeA(s::Array, d::Array)
@@ -302,9 +303,16 @@ function mmeSSBR(phenoData_G5::DataFrame,trait::Int,varSNP,varG,varR,Z1,X,X1,W,W
            Z11'X1  Z11'W1          Z11'Z11+Ai11*λ1]
     rhs = [X'y; W'y; Z11'y1];
 
-    sol, convHist = cg(lhs,rhs,tol=1e-12,log=true)
+#    sol, convHist = cg(lhs,rhs,tol=1e-12,log=true)
+    Pleft = DiagonalPreconditioner(lhs)
+    sol, convHist = cg(lhs, rhs, Pl=Pleft, log=true, tol = 1e-12)
+    
     convHist.isconverged == true ? println("conv: $convHist") : error("CG not converged")
 
+    io = open("convergence$trait", "w");
+    write(io, "$convHist");
+    close(io);
+    
     #sol=lhs\rhs
 
     aHat  = J*sol[2] + M*sol[3:(length(sol)-n1)]  #BV from genotypes (either true or imputed)
