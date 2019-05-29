@@ -570,9 +570,17 @@ function mmeSSBR_mt(phenoData_G5::DataFrame,nTraits::Int,coVarSNP,varG,varR,Z11Z
 
     rhs = [XX'*invR*y_2Trait ; WW'*invR*y_2Trait ; Z11Z11'*invR1*y1_2Trait];
 
-    sol, convHist = cg(lhs,rhs,tol=1e-12,log=true)
+   # sol, convHist = cg(lhs,rhs,tol=1e-12,log=true)
+    
+    Pleft = DiagonalPreconditioner(lhs)
+    sol, convHist = cg(lhs, rhs, Pl=Pleft, log=true, tol = 1e-12)
+    
     convHist.isconverged == true ? println("conv: $convHist") : error("CG not converged")
 
+    io = open("convergenceMT", "w");
+    write(io, "$convHist");
+    close(io);
+    
     #sol = lhs\rhs
     
     aHat = JJ*sol[[2,4]] + MM*sol[5:(length(sol)-2*n1)]
