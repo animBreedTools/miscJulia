@@ -49,7 +49,7 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     add_markers(model1,"refGeno",varG,separator=',',header=false);
     
     if BayesX=="RR-BLUP"
-            out = runMCMC(model1,phenoRef,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(piValue).txt");
+            out = runMCMC(model1,phenoRef,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_samples_file="MCMC_samples_$BayesX$(piValue).txt");
         else out = runMCMC(model1,phenoRef,Pi=piValue,estimatePi=false,chain_length=nChain,burnin=nBurnin,methods=BayesX,output_samples_frequency=nThin,output_file="MCMC_samples_$BayesX$(piValue).txt");
     end
     #MCMC_marker_effects_output_file was changes to output_file
