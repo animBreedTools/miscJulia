@@ -101,7 +101,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
 
     y1 = 100 + u1 .+ e[:,1]
-    y2 = 200 + u2 .+ e[:,2]
+    y2 = 100 + u2 .+ e[:,2]
  
     G = cov([u1[1:2200] u2[1:2200]])      #only based IND
     R = cov(e[1:2200,:])                  #only based IND
