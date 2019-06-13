@@ -30,7 +30,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     totQTLs = q1QTLs + q2QTLs + q12QTLs
     
     selectedLoci = []
-    p = mean(convert(Array,popGeno[:,2:end]),1)/2.0
+    p = mean(convert(Array,popGeno[1:2200,2:end]),1)/2.0  ##### #only based IND
     while length(selectedLoci) < totQTLs
         oneLoci = sample(2:size(popGeno,2), 1, replace=false) #column of loci
         if in(oneLoci,selectedLoci) != true
@@ -75,8 +75,8 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     
     u1 = u[:,1]
     u2 = u[:,2]
-    vare1 = cov(u1)*(1-h2_1)/h2_1
-    vare2 = cov(u2)*(1-h2_2)/h2_2
+    vare1 = cov(u1[1:2200])*(1-h2_1)/h2_1    #only based IND
+    vare2 = cov(u2[1:2200])*(1-h2_2)/h2_2
     
  ##(a)   u1 = Qc*(vcat([ones(q1QTLs), ones(q12QTLs), zeros(q2QTLs)]...).*alpha)
  ##(a)   vare1 = cov(u1)*(1-h2_1)/h2_1
@@ -89,8 +89,8 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     y1 = 100 + u1 .+ e[:,1]
     y2 = 200 + u2 .+ e[:,2]
  
-    G = cov([u1 u2])
-    R = cov(e)
+    G = cov([u1[1:2200] u2[1:2200]])      #only based IND
+    R = cov(e[1:2200,:])                  #only based IND
     h2sim  = Diagonal(G./(G+R))
     h2sim  = h2sim[find(h2sim)]
     
