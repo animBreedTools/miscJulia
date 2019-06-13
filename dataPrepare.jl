@@ -77,6 +77,14 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     u2 = u[:,2]
     
     #----------------
+    Xc     = convert(Array{Float64},popGeno)
+    Qc     = Xc[:,QTLs]
+    
+    u = Qc*alpha
+    
+    u1 = u[:,1]
+    u2 = u[:,2]
+
     Gnow  = cov([u1[1:2200] u2[1:2200]])
     println("alpha $(cov(alpha))")
     println("Gnow $Gnow")
@@ -88,6 +96,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     println("scaled alpha $(cov(alpha))")
     println("scaled G $(cov([u1[1:2200] u2[1:2200]]))")
     #----------------
+    
     vare1 = cov(u1[1:2200])*(1-h2_1)/h2_1    #only based IND
     vare2 = cov(u2[1:2200])*(1-h2_2)/h2_2
     
