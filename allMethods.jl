@@ -678,7 +678,8 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     ####
 
     coVarUhat = reshape(mean(convert(Array{Float64},readtable("coVarUhatOut"*"$rS",header=false)),1),2,2)
-#    varUhat = cov(convert(Array,genoRef[2:end])*snpEff)
+    varUhatOLD = cov(convert(Array,genoRef[2:end])*snpEff)
+    println("varOLD $varUhatOLD")
 
     covRegion = vcat(mean(convert(Array,readtable("covBetaOut"*"$rS",header=false)),dims=1)...)
     var1Region = vcat(mean(convert(Array,readtable("varBeta1Out"*"$rS",header=false)),dims=1)...)
@@ -702,7 +703,8 @@ function runMTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     p    = mean(convert(Array,genoRef[:,2:end]),1)./2.0
 
 
-#    varG_BayesPR     = reshape(sum(coVarSNP_BayesPR.*(2*p.*(1-p))',1),2,2)
+    varG_BayesPROLD     = reshape(sum(coVarSNP_BayesPR.*(2*p.*(1-p))',1),2,2)
+    println("varOLD $varG_BayesPROLD")
     coVarR_BayesPR = reshape(mean(convert(Array,readtable("varEOut"*"$rS",header=false)),1),2,2)
     gc()
     
