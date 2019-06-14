@@ -43,7 +43,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
         if in(oneLoci,selectedLoci) != true
             uniLoci = rand(Uniform(0,meanMaf))
             if(meanMaf-uniLoci)< minPQ[oneLoci-1][] <= (meanMaf+uniLoci)  #this -1 is because p has 1 less length bec. popGeno has ID
-                @printf("loci %.0f lower %.3f maf %.3f upper %.3f \n", oneLoci[]-1,meanMaf-uniLoci,p[oneLoci-1][],meanMaf+uniLoci)
+                @printf("loci %.0f lower %.3f maf %.3f upper %.3f \n", oneLoci[]-1,meanMaf-uniLoci,minPQ[oneLoci-1][],meanMaf+uniLoci)
                 push!(selectedLoci,oneLoci)
             end
         end
