@@ -37,7 +37,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     for i in length(p)
         minPQ[i] = min(p[i],q[i])
     end
-    print([p,q,maf])
+    print([p,q,minPQ])
     
     while length(selectedLoci) < totQTLs
         oneLoci = sample(2:size(popGeno,2), 1, replace=false) #column of loci
