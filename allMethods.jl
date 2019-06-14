@@ -366,7 +366,7 @@ function mtJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     #not IDs, rows!
     refRows = [findall(i -> i == j, phenoData_G4[:ID])[] for j in gpInd]
     phenoRef = phenoData_G4[refRows,:];
-    println("cov in ref $(size(PhenoRef)) $(cov(convert(Array,phenoRef[[:u1,:u2]])))")
+    println("cov in ref $(size(phenoRef)) $(cov(convert(Array,phenoRef[[:u1,:u2]])))")
 
     #not IDs, rows!
     refRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gpInd]
