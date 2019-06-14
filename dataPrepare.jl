@@ -31,11 +31,14 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     
     selectedLoci = []
     p = mean(convert(Array,popGeno[1:2200,2:end]),1)/2.0  ##### #only based IND
+    q = 1-p
+    minPQ = min.([p,q])
+    println("MAF $maf")
     while length(selectedLoci) < totQTLs
         oneLoci = sample(2:size(popGeno,2), 1, replace=false) #column of loci
         if in(oneLoci,selectedLoci) != true
             uniLoci = rand(Uniform(0,meanMaf))
-            if(meanMaf-uniLoci)< p[oneLoci-1][] <= (meanMaf+uniLoci)  #this -1 is because p has 1 less length bec. popGeno has ID
+            if(meanMaf-uniLoci)< minPQ[oneLoci-1][] <= (meanMaf+uniLoci)  #this -1 is because p has 1 less length bec. popGeno has ID
                 @printf("loci %.0f lower %.3f maf %.3f upper %.3f \n", oneLoci[]-1,meanMaf-uniLoci,p[oneLoci-1][],meanMaf+uniLoci)
                 push!(selectedLoci,oneLoci)
             end
