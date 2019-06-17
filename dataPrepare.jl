@@ -50,7 +50,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     end
     @printf("mean MAF of selected loci: %.2f \n", mean(minPQ[vcat(selectedLoci...).-1]))
     
-    QTLs = vcat(selectedLoci...)   #columns of QTL since 1st column is ID
+    QTLs = shuffle(vcat(selectedLoci...))   #columns of QTL since 1st column is ID
  
 ##(a) alpha = eval(parse("rand($dist$parms,$totQTLs)"))
     
