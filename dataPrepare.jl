@@ -96,8 +96,8 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     println("scaled G $(cov([u1[1:2200] u2[1:2200]]))")
     #----------------
     
-    vare1 = cov(u1[1:2200])*(1-h2_1)/h2_1    #only based IND
-    vare2 = cov(u2[1:2200])*(1-h2_2)/h2_2
+    vare1 = var(u1[1:2200])*(1-h2_1)/h2_1    #only based IND
+    vare2 = var(u2[1:2200])*(1-h2_2)/h2_2
     
  ##(a)   u1 = Qc*(vcat([ones(q1QTLs), ones(q12QTLs), zeros(q2QTLs)]...).*alpha)
  ##(a)   vare1 = cov(u1)*(1-h2_1)/h2_1
@@ -106,7 +106,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
  ##(a)   vare2 = cov(u2)*(1-h2_2)/h2_2
     
     e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
-
+    
     y1 = u1 .+ e[:,1]                       #no add Mean
     y2 = u2 .+ e[:,2]
  
