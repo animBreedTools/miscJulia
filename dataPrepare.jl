@@ -107,7 +107,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     
 #    e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
     
-    e = {Float64}(size(popGeno,1),2)
+    e = Array{Float64}(size(popGeno,1),2)
     e[:,1] = rand(Normal(0,vare1),size(popGeno,1))
     e[:,2] = rand(Normal(0,vare2),size(popGeno,1))
     
