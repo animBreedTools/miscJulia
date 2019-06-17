@@ -30,20 +30,27 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     totQTLs = q1QTLs + q2QTLs + q12QTLs
     
     selectedLoci = []
-    p = mean(convert(Array,popGeno[:,2:end]),1)/2.0
+    p = mean(convert(Array,popGeno[1:2200,2:end]),1)./2  ##### #only based IND 
+    q = 1-p
+    minPQ = copy(p)
+    for i in 1:length(p)
+        minPQ[i] = min(p[i],q[i])
+    end
+    println([p' q' minPQ'])
+    
     while length(selectedLoci) < totQTLs
         oneLoci = sample(2:size(popGeno,2), 1, replace=false) #column of loci
         if in(oneLoci,selectedLoci) != true
-            uniLoci = rand(Uniform(0,meanMaf))
-            if(meanMaf-uniLoci)< p[oneLoci-1][] <= (meanMaf+uniLoci)  #this -1 is because p has 1 less length bec. popGeno has ID
-                @printf("loci %.0f lower %.3f maf %.3f upper %.3f \n", oneLoci[]-1,meanMaf-uniLoci,p[oneLoci-1][],meanMaf+uniLoci)
+            uniLoci = rand(Uniform(0,meanMaf))   #0.01<maf<0.30 I put 0.05 instead of "meanMaf"
+            if(meanMaf-uniLoci)< minPQ[oneLoci-1][] <= (meanMaf+uniLoci)  #this -1 is because p has 1 less length bec. popGeno has ID
+                @printf("loci %.0f lower %.3f maf %.3f upper %.3f \n", oneLoci[]-1,meanMaf-uniLoci,minPQ[oneLoci-1][],meanMaf+uniLoci)
                 push!(selectedLoci,oneLoci)
             end
         end
     end
-    @printf("mean MAF of selected loci: %.2f \n", mean(p[vcat(selectedLoci...).-1]))
+    @printf("mean MAF of selected loci: %.2f \n", mean(minPQ[vcat(selectedLoci...).-1]))
     
-    QTLs = vcat(selectedLoci...)   #columns of QTL since 1st column is ID
+    QTLs = shuffle(vcat(selectedLoci...))   #columns of QTL since 1st column is ID
  
 ##(a) alpha = eval(parse("rand($dist$parms,$totQTLs)"))
     
@@ -75,8 +82,22 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     
     u1 = u[:,1]
     u2 = u[:,2]
-    vare1 = cov(u1)*(1-h2_1)/h2_1
-    vare2 = cov(u2)*(1-h2_2)/h2_2
+    
+    #----------------
+    Gnow  = cov([u1[1:2200] u2[1:2200]])
+    println("alpha $(cov(alpha))")
+    println("Gnow $Gnow")
+    c     = diag(100.0 ./Gnow)
+    alpha = sqrt.(c').*alpha
+    u = Qc*alpha
+    u1 = u[:,1]
+    u2 = u[:,2]
+    println("scaled alpha $(cov(alpha))")
+    println("scaled G $(cov([u1[1:2200] u2[1:2200]]))")
+    #----------------
+        
+    vare1 = var(u1)*(1-h2_1)/h2_1
+    vare2 = var(u2)*(1-h2_2)/h2_2
     
  ##(a)   u1 = Qc*(vcat([ones(q1QTLs), ones(q12QTLs), zeros(q2QTLs)]...).*alpha)
  ##(a)   vare1 = cov(u1)*(1-h2_1)/h2_1
@@ -86,11 +107,11 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     
     e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
 
-    y1 = 100 + u1 .+ e[:,1]
-    y2 = 200 + u2 .+ e[:,2]
+    y1 = u1 .+ e[:,1]
+    y2 = u2 .+ e[:,2]
  
-    G = cov([u1 u2])
-    R = cov(e)
+    G = cov([u1[1:2200] u2[1:2200]])      #only based IND
+    R = cov(e[1:2200,:])                  #only based IND
     h2sim  = Diagonal(G./(G+R))
     h2sim  = h2sim[find(h2sim)]
     
