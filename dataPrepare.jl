@@ -105,7 +105,11 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
  ##(a)   u2 = Qc*(vcat([zeros(q1QTLs), ones(q12QTLs), ones(q2QTLs)]...).*alpha)
  ##(a)   vare2 = cov(u2)*(1-h2_2)/h2_2
     
-    e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
+#    e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
+    
+    e = {Float64}(size(popGeno,1),2)
+    e[:,1] = rand(Normal(0,vare1),size(popGeno,1))
+    e[:,2] = rand(Normal(0,vare2),size(popGeno,1))
     
     y1 = u1 .+ e[:,1]                       #no add Mean
     y2 = u2 .+ e[:,2]
