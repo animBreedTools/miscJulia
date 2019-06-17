@@ -30,7 +30,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     totQTLs = q1QTLs + q2QTLs + q12QTLs
     
     selectedLoci = []
-    p = mean(convert(Array,popGeno[1:2200,2:end]),1)/2.0  ##### #only based IND    
+    p = mean(convert(Array,popGeno[1:2200,2:end]),1)./2  ##### #only based IND    
     q = 1-p
     minPQ = copy(p)
     for i in 1:length(p)
@@ -48,7 +48,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
             end
         end
     end
-    @printf("mean MAF of selected loci: %.2f \n", mean(p[vcat(selectedLoci...).-1]))
+    @printf("mean MAF of selected loci: %.2f \n", mean(minPQ[vcat(selectedLoci...).-1]))
     
     QTLs = vcat(selectedLoci...)   #columns of QTL since 1st column is ID
  
