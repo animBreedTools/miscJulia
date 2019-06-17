@@ -41,7 +41,7 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
     while length(selectedLoci) < totQTLs
         oneLoci = sample(2:size(popGeno,2), 1, replace=false) #column of loci
         if in(oneLoci,selectedLoci) != true
-            uniLoci = rand(Uniform(0,meanMaf))
+            uniLoci = rand(Uniform(0,meanMaf))   #0.01<maf<0.30
             if(meanMaf-uniLoci)< minPQ[oneLoci-1][] <= (meanMaf+uniLoci)  #this -1 is because p has 1 less length bec. popGeno has ID
                 @printf("loci %.0f lower %.3f maf %.3f upper %.3f \n", oneLoci[]-1,meanMaf-uniLoci,minPQ[oneLoci-1][],meanMaf+uniLoci)
                 push!(selectedLoci,oneLoci)
@@ -105,12 +105,8 @@ function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
  ##(a)   u2 = Qc*(vcat([zeros(q1QTLs), ones(q12QTLs), ones(q2QTLs)]...).*alpha)
  ##(a)   vare2 = cov(u2)*(1-h2_2)/h2_2
     
-#    e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
-    
-    e = Array{Float64}(size(popGeno,1),2)
-    e[:,1] .= rand(Normal(0,sqrt(vare1)),size(popGeno,1))
-    e[:,2] .= rand(Normal(0,sqrt(vare2)),size(popGeno,1))
-    
+    e = rand(MvNormal([0.0; 0.0],[vare1 0;0 vare2]),size(popGeno,1))'
+        
     y1 = u1 .+ e[:,1]                       #no add Mean
     y2 = u2 .+ e[:,2]
  
