@@ -25,12 +25,39 @@ function samplePop(genotypes,whichGen,snpInfo,chr,nRef,nTest)
     return nTot, refInd, testInd, popGeno
 end 
 
-function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs)
+function simPheno(popGeno,h2_1,h2_2,meanMaf,dist,parms,q1QTLs,q2QTLs,q12QTLs,snpInfo,nChr)
     @printf("read %.0f individuals and %.0f genotypes \n", size(popGeno,1),size(popGeno,2)-1)
     totQTLs = q1QTLs + q2QTLs + q12QTLs
     
+    mapData = readtable(myMap,header=false,separator=' ')
+    println(by(mapData, :x4, nrow))
+    chrData = cumsum(by(mapData, :x4, nrow)[:x1])[nChr]
+    
+    usedMapData = mapData[1:chrData,:]
+    
+    finalGroups = []
+    count = 0
+
+for thisChr in 1:nChr
+    thisRange1 = collect(0:1000000:(maximum(usedMapData[usedMapData[:x4].==thisChr,:x5])))
+    thisRange2 = collect(1000000:1000000:(maximum(usedMapData[usedMapData[:x4].==thisChr,:x5])+1000000))
+    finalRange = [thisRange1 thisRange2]
+
+    theseSNPs = usedMapData[usedMapData[:x4].==thisChr,:]
+for groupChr in 1:size(finalRange,1)
+    groupSize = length(theseSNPs[finalRange[groupChr,1].<theseSNPs[:x5].<=finalRange[groupChr,2],:x5])
+    if groupSize !=0
+            count = count+1
+            finalGroups = push!(finalGroups,vcat(fill(count,groupSize))...)
+    end
+end    
+end
+    
+    usedMapData.groups = finalGroups
+    usedMapData.nSNP   = collect(1:size(usedMapData,1))
+    
     selectedLoci = []
-selectedBins = []
+    selectedBins = []
 
     p = mean(convert(Array,popGeno[1:2200,2:end]),1)./2  ##### #only based IND 
     q = 1-p
