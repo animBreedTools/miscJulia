@@ -744,7 +744,7 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
 
     bayesPR(genoRef, phenoRef[Symbol("pheno$trait")], myMap , nChr, rS, varG, varR, nChain, nBurnin, nThin, false)
 
-    snpEff = readtable("betaOut"*"$rS",header=false)
+    snpEff = readtable("betaOutST"*"$rS",header=false)
     snpEff   = mean(convert(Array,snpEff),dims=1)'
 
     ebvBayes = convert(Array{Int64},genoTest)*snpEff
@@ -758,10 +758,10 @@ function runSTBayesPR(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoDa
     println("single BayesPR BIAS $(bias_Bayes)")
     ####
 
-    varUhat = mean(convert(Array,readtable("varUhatOut"*"$rS",header=false)))
+    varUhat = mean(convert(Array,readtable("varUhatOutST"*"$rS",header=false)))
 #    varUhat = var(convert(Array,genoRef[2:end])*snpEff)
 
-    varRegion = vcat(mean(convert(Array,readtable("varBetaOut"*"$rS",header=false)),dims=1)...)
+    varRegion = vcat(mean(convert(Array,readtable("varBetaOutST"*"$rS",header=false)),dims=1)...)
 
     snpFile = readtable("snpInfo",header=false);
     
