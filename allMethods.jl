@@ -62,6 +62,8 @@ function stJWAS(phenoDataInRef::DataFrame,phenoDataInVal::DataFrame,genoData_All
     # first 200 is sires gNoPInd[201:end]
     testRows = [findall(i -> i == j, genoData_Combined[:ID])[] for j in gNoPInd[end-499:end]] #401:end
     genoTest = genoData_Combined[testRows,2:end];
+    
+    writecsv("testGeno",convert(Array,genoTest))
 
     #ebvBayes = convert(Array{Int64},genoTest)*out["Posterior mean of marker effects"]
     snpEff   = convert(Array,readtable("MCMC_samples_$BayesX$(piValue).txt_marker_effects_pheno$trait.txt",separator=',',header=false))
